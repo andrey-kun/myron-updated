@@ -34,6 +34,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.Function;
 
+@SuppressWarnings({"unused", "deprecation"})
 @Environment(EnvType.CLIENT)
 public class Myron implements ClientModInitializer {
     private final static Vec3f NONE = new Vec3f();
@@ -51,9 +52,9 @@ public class Myron implements ClientModInitializer {
             Collection<Identifier> ids = new HashSet<>();
 
             Collection<Identifier> candidates = new ArrayList<>();
-            candidates.addAll(manager.findResources("models/block", path -> true));
-            candidates.addAll(manager.findResources("models/item", path -> true));
-            candidates.addAll(manager.findResources("models/misc", path -> true));
+            candidates.addAll(manager.findResources("models/block", path -> true).keySet());
+            candidates.addAll(manager.findResources("models/item", path -> true).keySet());
+            candidates.addAll(manager.findResources("models/misc", path -> true).keySet());
 
             for (Identifier id : candidates) {
                 if (id.getPath().endsWith(".obj")) {
@@ -62,7 +63,7 @@ public class Myron implements ClientModInitializer {
                 } else {
                     Identifier test = new Identifier(id.getNamespace(), id.getPath() + ".obj");
 
-                    if (manager.containsResource(test)) {
+                    if (manager.getResource(test).isPresent()) {
                         ids.add(id);
                     }
                 }
@@ -95,9 +96,9 @@ public class Myron implements ClientModInitializer {
             modelPath = new Identifier(modelPath.getNamespace(), "models/" + modelPath.getPath());
         }
 
-        if (resourceManager.containsResource(modelPath)) {
+        if (resourceManager.getResource(modelPath).isPresent()) {
             try {
-                InputStream inputStream = resourceManager.getResource(modelPath).getInputStream();
+                InputStream inputStream = resourceManager.getResource(modelPath).get().getInputStream();
                 Obj obj = ObjReader.read(inputStream);
 
                 Map<String, MyronMaterial> materials = getMaterials(resourceManager, modelPath, obj);
@@ -118,9 +119,9 @@ public class Myron implements ClientModInitializer {
             path = path.substring(0, path.lastIndexOf('/') + 1) + s;
             Identifier resource = new Identifier(identifier.getNamespace(), path);
 
-            if (resourceManager.containsResource(resource)) {
+            if (resourceManager.getResource(resource).isPresent()) {
                 MaterialReader.read(new BufferedReader(
-                        new InputStreamReader(resourceManager.getResource(resource).getInputStream())))
+                        new InputStreamReader(resourceManager.getResource(resource).get().getInputStream())))
                         .forEach(material -> materials.put(material.name, material));
             } else {
                 Myron.LOGGER.warn("Texture does not exist: {}", resource);

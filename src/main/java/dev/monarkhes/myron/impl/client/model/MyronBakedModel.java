@@ -13,12 +13,12 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class MyronBakedModel implements BakedModel, FabricBakedModel {
@@ -41,7 +41,7 @@ public class MyronBakedModel implements BakedModel, FabricBakedModel {
         if (this.mesh != null) {
             renderContext.meshConsumer().accept(mesh);
         } else {
-            Myron.LOGGER.warn("Mesh is null while emitting block quads for block {}", blockState.getBlock().getName().asString());
+            Myron.LOGGER.warn("Mesh is null while emitting block quads for block {}", blockState.getBlock().getName().getString());
         }
     }
 
@@ -50,11 +50,12 @@ public class MyronBakedModel implements BakedModel, FabricBakedModel {
         if (this.mesh != null) {
             renderContext.meshConsumer().accept(mesh);
         } else {
-            Myron.LOGGER.warn("Mesh is null while emitting block quads for item {}", itemStack.getItem().getName().asString());
+            Myron.LOGGER.warn("Mesh is null while emitting block quads for item {}", itemStack.getItem().getName().getString());
         }
     }
 
     // Since FabricBakedModels defer to use `emitBlockQuads` and `emitItemQuads`, this will only be called if
+    @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
         if (this.backupQuads == null) {
             this.backupQuads = new ArrayList<>();
