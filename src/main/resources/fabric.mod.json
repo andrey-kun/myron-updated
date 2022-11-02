@@ -2,9 +2,10 @@
   "schemaVersion": 1,
   "id": "myron",
   "version": "${version}",
-  "name": "Myron",
+  "name": "Myron Updated",
   "description": "An OBJ model loader for the fabric ecosystem",
   "authors": [
+    "Qboi123",
     "Haven King",
     "abused_master"
   ],
@@ -23,9 +24,9 @@
     "myron.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.11.6",
-    "fabric": ">=0.37.0+1.17",
-    "minecraft": ">=1.17.1"
+    "fabricloader": ">=0.14.0",
+    "fabric": ">=0.58.0+1.19.1",
+    "minecraft": ">=1.19.1"
   },
   "breaks": {
     "foml": "*"
